@@ -1,0 +1,9 @@
+<strings>
+    <string id="AppName">24hourclockface</string>
+    <string id="ThemeTitle">Theme</string>
+    <string id="ThemeDark">Dark</string>
+    <string id="ThemeLight">Light</string>
+    <string id="Use24HourTitle">24-hour digital time</string>
+    <string id="ShowDigitalTimeTitle">Show digital time</string>
+    <string id="ShowBatteryTitle">Show battery</string>
+</strings>

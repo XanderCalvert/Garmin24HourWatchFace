@@ -1,0 +1,17 @@
+<settings>
+    <setting propertyKey="@Properties.Theme" title="@Strings.ThemeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.ThemeDark</listEntry>
+            <listEntry value="1">@Strings.ThemeLight</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.Use24Hour" title="@Strings.Use24HourTitle">
+        <settingConfig type="boolean"/>
+    </setting>
+    <setting propertyKey="@Properties.ShowDigitalTime" title="@Strings.ShowDigitalTimeTitle">
+        <settingConfig type="boolean"/>
+    </setting>
+    <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
+        <settingConfig type="boolean"/>
+    </setting>
+</settings>
