@@ -8,9 +8,6 @@ module Theme {
     const THEME_DARK = 0;
     const THEME_LIGHT = 1;
 
-    const HOUR_LABELS = [ "00", "03", "06", "09", "12", "15", "18", "21" ];
-    const HOUR_ANGLES = [ 0, 3, 6, 9, 12, 15, 18, 21 ];
-
     function getThemeId() {
         return Properties.getValue("Theme");
     }
@@ -23,7 +20,7 @@ module Theme {
         return getThemeId() == THEME_LIGHT ? Graphics.COLOR_DK_GRAY : Graphics.COLOR_LT_GRAY;
     }
 
-    function getLabelColor() {
+    function getTickColor() {
         return getThemeId() == THEME_LIGHT ? Graphics.COLOR_DK_GRAY : Graphics.COLOR_LT_GRAY;
     }
 

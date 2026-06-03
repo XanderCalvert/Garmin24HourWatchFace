@@ -12,7 +12,10 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
     private const CENTER_Y = 140;
     private const DIAL_RADIUS = 120;
     private const HAND_LENGTH = 95;
-    private const LABEL_RADIUS = 102;
+    private const TICK_OUTER_RADIUS = DIAL_RADIUS;
+    private const TICK_MINOR_INNER_RADIUS = DIAL_RADIUS - 8;
+    private const TICK_MAJOR_INNER_RADIUS = DIAL_RADIUS - 14;
+    private const BATTERY_RADIUS = DIAL_RADIUS + 14;
 
     function initialize() {
         WatchFace.initialize();
@@ -54,17 +57,30 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
         dc.setColor(Theme.getDialColor(), Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(CENTER_X, CENTER_Y, DIAL_RADIUS);
 
-        dc.setColor(Theme.getLabelColor(), Graphics.COLOR_TRANSPARENT);
-        var font = Graphics.FONT_XTINY;
+        drawHourIndicators(dc);
+    }
 
-        for (var i = 0; i < Theme.HOUR_LABELS.size(); i += 1) {
-            var hour = Theme.HOUR_ANGLES[i];
+    private function drawHourIndicators(dc) {
+        dc.setColor(Theme.getTickColor(), Graphics.COLOR_TRANSPARENT);
+
+        for (var hour = 0; hour < 24; hour += 1) {
             var angleDeg = (hour / 24.0) * 360.0 - 90.0;
             var rad = angleDeg * Math.PI / 180.0;
-            var x = (CENTER_X + LABEL_RADIUS * Math.cos(rad)).toNumber();
-            var y = (CENTER_Y + LABEL_RADIUS * Math.sin(rad)).toNumber();
-            dc.drawText(x, y, font, Theme.HOUR_LABELS[i], Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            var cosA = Math.cos(rad);
+            var sinA = Math.sin(rad);
+            var isMajor = hour % 6 == 0;
+            var innerR = isMajor ? TICK_MAJOR_INNER_RADIUS : TICK_MINOR_INNER_RADIUS;
+
+            var x1 = (CENTER_X + innerR * cosA).toNumber();
+            var y1 = (CENTER_Y + innerR * sinA).toNumber();
+            var x2 = (CENTER_X + TICK_OUTER_RADIUS * cosA).toNumber();
+            var y2 = (CENTER_Y + TICK_OUTER_RADIUS * sinA).toNumber();
+
+            dc.setPenWidth(isMajor ? 2 : 1);
+            dc.drawLine(x1, y1, x2, y2);
         }
+
+        dc.setPenWidth(1);
     }
 
     private function drawHand(dc, clockTime) {
@@ -124,14 +140,19 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
     private function drawBattery(dc) {
         var stats = System.getSystemStats();
         var batteryText = stats.battery.format("%d") + "%";
+        // Bottom of dial (hour 12 on this 24h face), just outside the tick ring.
+        var angleDeg = 90.0;
+        var rad = angleDeg * Math.PI / 180.0;
+        var x = (CENTER_X + BATTERY_RADIUS * Math.cos(rad)).toNumber();
+        var y = (CENTER_Y + BATTERY_RADIUS * Math.sin(rad)).toNumber();
 
         dc.setColor(Theme.getMutedColor(), Graphics.COLOR_TRANSPARENT);
         dc.drawText(
-            CENTER_X,
-            dc.getHeight() - 18,
+            x,
+            y,
             Graphics.FONT_XTINY,
             batteryText,
-            Graphics.TEXT_JUSTIFY_CENTER
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
         );
     }
 
