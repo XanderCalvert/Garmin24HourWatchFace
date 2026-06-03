@@ -16,10 +16,6 @@ module Theme {
         return getThemeId() == THEME_LIGHT ? Graphics.COLOR_WHITE : Graphics.COLOR_BLACK;
     }
 
-    function getDialColor() {
-        return getThemeId() == THEME_LIGHT ? Graphics.COLOR_DK_GRAY : Graphics.COLOR_LT_GRAY;
-    }
-
     function getTickColor() {
         return getThemeId() == THEME_LIGHT ? Graphics.COLOR_DK_GRAY : Graphics.COLOR_LT_GRAY;
     }

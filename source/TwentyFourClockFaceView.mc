@@ -43,7 +43,7 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
             drawSunBorder(dc);
         }
 
-        drawDial(dc);
+        drawHourIndicators(dc);
         drawHand(dc, clockTime);
         drawCenterDot(dc);
 
@@ -59,13 +59,6 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
     }
 
     function onHide() {
-    }
-
-    private function drawDial(dc) {
-        dc.setColor(Theme.getDialColor(), Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(CENTER_X, CENTER_Y, DIAL_RADIUS);
-
-        drawHourIndicators(dc);
     }
 
     private function drawHourIndicators(dc) {
