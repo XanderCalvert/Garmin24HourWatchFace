@@ -50,6 +50,15 @@ If `enduro3` fails with *Invalid device id*, download the **enduro3** device in 
 
 Or use **Run Without Debugging** in the Monkey C extension.
 
+### Sunrise/sunset border in the simulator
+
+The coloured ring needs a location. In the simulator:
+
+1. **Simulation → Set current position** (or **Activity Data**) and enter your latitude/longitude, then click **OK**
+2. Reload the watch face (switch away and back, or restart the simulation)
+
+You should see **blue / orange / yellow** segments around the ring at the correct clock times (not one solid colour).
+
 ## Enduro 3 deployment
 
 ```powershell

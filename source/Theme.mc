@@ -47,4 +47,21 @@ module Theme {
     function showBattery() {
         return Properties.getValue("ShowBattery");
     }
+
+    function showSunBorder() {
+        return Properties.getValue("ShowSunBorder");
+    }
+
+    function getSunBorderColor(phase) {
+        if (phase == SunSchedule.PHASE_DAY) {
+            return Graphics.COLOR_YELLOW;
+        }
+        if (phase == SunSchedule.PHASE_DAWN || phase == SunSchedule.PHASE_DUSK) {
+            return Graphics.COLOR_ORANGE;
+        }
+        if (phase == SunSchedule.PHASE_NIGHT) {
+            return Graphics.COLOR_BLUE;
+        }
+        return Graphics.COLOR_BLUE;
+    }
 }

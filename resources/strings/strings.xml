@@ -6,4 +6,5 @@
     <string id="Use24HourTitle">24-hour digital time</string>
     <string id="ShowDigitalTimeTitle">Show digital time</string>
     <string id="ShowBatteryTitle">Show battery</string>
+    <string id="ShowSunBorderTitle">Sunrise/sunset border</string>
 </strings>

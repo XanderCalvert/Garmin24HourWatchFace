@@ -1,6 +1,6 @@
 # 24hourclockface
 
-A Garmin Connect IQ watch face where **one hand completes a full rotation per day** — not per hour. Midnight at the top, midday at the bottom. The hand moves once per minute based on minutes since midnight, giving a calm, approximate sense of where you are in the day.
+A Garmin Connect IQ watch face where **one hand completes a full rotation per day** — not per hour. Midnight at the bottom, midday at the top. The hand moves once per minute based on minutes since midnight, giving a calm, approximate sense of where you are in the day.
 
 Built with **Monkey C / Connect IQ** for the **Garmin Enduro 3** (280×280 round MIP).
 
@@ -9,24 +9,24 @@ Built with **Monkey C / Connect IQ** for the **Garmin Enduro 3** (280×280 round
 Traditional watch hands sweep the dial twice a day. This face sweeps **once**. The analog hand is intentionally slow — it tells you roughly where you are in the day, not the exact minute. A small digital readout (time, date, battery) keeps it practical.
 
 ```
-        00
-   21        03
-
-18      •      06
-
-   15        09
         12
+   09        15
+
+06      •      18
+
+   03        21
+        00
 ```
 
 ## How the hand angle works
 
 ```monkeyc
 var minutes = clockTime.hour * 60 + clockTime.min;
-var angleDeg = (minutes / 1440.0) * 360.0 - 90.0;
+var angleDeg = (minutes / 1440.0) * 360.0 + 90.0;
 ```
 
 - **1440** = minutes in a day
-- **−90°** offset places **00:00 at the top** and **12:00 at the bottom**
+- **+90°** offset places **00:00 at the bottom** and **12:00 at the top**
 - Seconds are ignored; the face updates **once per minute** via the normal watch face lifecycle
 
 ## Features

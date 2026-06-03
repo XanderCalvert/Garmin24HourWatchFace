@@ -3,4 +3,5 @@
     <property id="Use24Hour" type="boolean">true</property>
     <property id="ShowDigitalTime" type="boolean">true</property>
     <property id="ShowBattery" type="boolean">true</property>
+    <property id="ShowSunBorder" type="boolean">true</property>
 </properties>
