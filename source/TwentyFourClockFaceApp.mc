@@ -14,7 +14,19 @@ class TwentyFourClockFaceApp extends Application.AppBase {
     function onStop(state) {
     }
 
+    function onSettingsChanged() as Void {
+        WatchUi.requestUpdate();
+    }
+
+    function onNightModeChanged() as Void {
+        WatchUi.requestUpdate();
+    }
+
     function getInitialView() {
         return [ new TwentyFourClockFaceView(), new TwentyFourClockFaceDelegate() ];
+    }
+
+    function getSettingsView() {
+        return [ new ClockFaceSettingsMenu(), new ClockFaceSettingsDelegate() ];
     }
 }

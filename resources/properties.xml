@@ -2,6 +2,8 @@
     <property id="Theme" type="number">0</property>
     <property id="Use24Hour" type="boolean">true</property>
     <property id="ShowDigitalTime" type="boolean">true</property>
+    <property id="ShowSteps" type="boolean">true</property>
     <property id="ShowBattery" type="boolean">true</property>
+    <property id="ShowDate" type="boolean">true</property>
     <property id="ShowSunBorder" type="boolean">true</property>
 </properties>

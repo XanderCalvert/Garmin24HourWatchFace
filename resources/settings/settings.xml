@@ -3,6 +3,7 @@
         <settingConfig type="list">
             <listEntry value="0">@Strings.ThemeDark</listEntry>
             <listEntry value="1">@Strings.ThemeLight</listEntry>
+            <listEntry value="2">@Strings.ThemeAuto</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.Use24Hour" title="@Strings.Use24HourTitle">
@@ -11,7 +12,13 @@
     <setting propertyKey="@Properties.ShowDigitalTime" title="@Strings.ShowDigitalTimeTitle">
         <settingConfig type="boolean"/>
     </setting>
+    <setting propertyKey="@Properties.ShowSteps" title="@Strings.ShowStepsTitle">
+        <settingConfig type="boolean"/>
+    </setting>
     <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
+        <settingConfig type="boolean"/>
+    </setting>
+    <setting propertyKey="@Properties.ShowDate" title="@Strings.ShowDateTitle">
         <settingConfig type="boolean"/>
     </setting>
     <setting propertyKey="@Properties.ShowSunBorder" title="@Strings.ShowSunBorderTitle">
