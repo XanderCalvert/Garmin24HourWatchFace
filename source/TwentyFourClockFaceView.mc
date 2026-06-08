@@ -19,6 +19,7 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
     }
 
     function onLayout(dc) {
+        DisplaySettings.invalidateTimeFonts();
         DialGeometry.initFromDc(dc);
     }
 
@@ -40,15 +41,14 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
         }
 
         drawHourIndicators(dc);
+
+        HudLayout.compute(dc, clockTime, today);
+
         drawHand(dc, clockTime);
         drawCenterDot(dc);
 
-        if (Theme.showDigitalTime() || DataFields.hasStatsLine()) {
-            drawCenterData(dc, clockTime);
-        }
-
-        if (Theme.showDate()) {
-            drawDate(dc, today);
+        if (Theme.hasVisibleHudContent()) {
+            drawCenterHud(dc, clockTime, today);
         }
     }
 
@@ -102,7 +102,23 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
 
         dc.setColor(Theme.getHandColor(), Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(3);
-        dc.drawLine(x1, y1, x2, y2);
+
+        if (Theme.showDigitalTime() && HudLayout.timeY != null) {
+            var timeText = DataFields.formatDigitalTime(clockTime);
+            var timeFont = DisplaySettings.fontForTimeDisplay(dc, Theme.getDigitalTimeMode());
+            var bounds = TextOutline.textBounds(
+                dc,
+                DialGeometry.centerX,
+                HudLayout.timeY,
+                timeFont,
+                timeText,
+                DisplaySettings.HUD_STROKE_TIME
+            );
+            HandClip.drawLineExcludingRect(dc, x1, y1, x2, y2, bounds[0], bounds[1], bounds[2], bounds[3]);
+        } else {
+            dc.drawLine(x1, y1, x2, y2);
+        }
+
         dc.setPenWidth(1);
     }
 
@@ -111,58 +127,99 @@ class TwentyFourClockFaceView extends WatchUi.WatchFace {
         dc.fillCircle(DialGeometry.centerX, DialGeometry.centerY, DialGeometry.centerDotRadius);
     }
 
-    private function drawCenterData(dc, clockTime) {
-        var showTime = Theme.showDigitalTime();
-        var statsLine = DataFields.formatStatsLine();
+    private function drawCenterHud(dc, clockTime, today) {
+        var justify = Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER;
+        var outline = Theme.getTextOutlineColor();
 
-        if (showTime || statsLine != null) {
-            drawCenterDataBackground(dc);
-        }
-
-        if (showTime) {
-            dc.setColor(Theme.getDigitalColor(), Graphics.COLOR_TRANSPARENT);
-            dc.drawText(
+        var stepsText = DataFields.formatStepsText();
+        if (stepsText != null && HudLayout.stepsY != null) {
+            drawHudText(
+                dc,
                 DialGeometry.centerX,
-                DialGeometry.centerY + DialGeometry.digitalTimeYOffset,
-                Graphics.FONT_SMALL,
-                DataFields.formatDigitalTime(clockTime),
-                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+                HudLayout.stepsY,
+                DisplaySettings.fontForFieldMode(Theme.getStepsMode()),
+                stepsText,
+                Theme.getStatsColor(),
+                outline,
+                justify,
+                DisplaySettings.HUD_STROKE_SMALL
             );
         }
 
-        if (statsLine != null) {
-            dc.setColor(Theme.getStatsColor(), Graphics.COLOR_TRANSPARENT);
-            dc.drawText(
+        if (Theme.showDigitalTime() && HudLayout.timeY != null) {
+            var timeText = DataFields.formatDigitalTime(clockTime);
+            var timeFont = DisplaySettings.fontForTimeDisplay(dc, Theme.getDigitalTimeMode());
+            var timeStroke = DisplaySettings.HUD_STROKE_TIME;
+
+            TextOutline.fillBackdrop(
+                dc,
                 DialGeometry.centerX,
-                DialGeometry.centerY + DialGeometry.statsYOffset,
-                Graphics.FONT_XTINY,
-                statsLine,
-                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+                HudLayout.timeY,
+                timeFont,
+                timeText,
+                justify,
+                timeStroke,
+                Theme.getBackgroundColor()
             );
+
+            drawHudText(
+                dc,
+                DialGeometry.centerX,
+                HudLayout.timeY,
+                timeFont,
+                timeText,
+                Theme.getDigitalColor(),
+                outline,
+                justify,
+                timeStroke
+            );
+        }
+
+        var dateText = DataFields.formatDateText(today);
+        if (dateText != null && HudLayout.dateY != null) {
+            drawHudText(
+                dc,
+                DialGeometry.centerX,
+                HudLayout.dateY,
+                DisplaySettings.fontForFieldMode(Theme.getDateMode()),
+                dateText,
+                Theme.getMutedColor(),
+                outline,
+                justify,
+                DisplaySettings.HUD_STROKE_SMALL
+            );
+        }
+
+        if (Theme.showBattery() && HudLayout.batteryY != null) {
+            var batteryText = DataFields.formatBatteryPercent();
+            if (batteryText != null) {
+                drawHudText(
+                    dc,
+                    DialGeometry.centerX,
+                    HudLayout.batteryY,
+                    DisplaySettings.fontForFieldMode(Theme.getBatteryMode()),
+                    batteryText,
+                    Theme.getBatteryTextColor(),
+                    outline,
+                    justify,
+                    DisplaySettings.HUD_STROKE_SMALL
+                );
+            }
         }
     }
 
-    private function drawCenterDataBackground(dc) {
-        dc.setColor(Theme.getBackgroundColor(), Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(
-            DialGeometry.centerX - DialGeometry.centerDataBgHalfW,
-            DialGeometry.centerY - DialGeometry.centerDataBgHalfH,
-            DialGeometry.centerDataBgHalfW * 2,
-            DialGeometry.centerDataBgHalfH * 2
-        );
-    }
-
-    private function drawDate(dc, today) {
-        var dateText = EvaHud.formatDateLine(today);
-
-        dc.setColor(Theme.getMutedColor(), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(
-            DialGeometry.centerX,
-            DialGeometry.centerY + DialGeometry.dateYOffset,
-            Graphics.FONT_XTINY,
-            dateText,
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-        );
+    private function drawHudText(
+        dc,
+        x as Number,
+        y as Number,
+        font as Graphics.FontType,
+        text as String,
+        fillColor,
+        outlineColor,
+        justify as Number,
+        strokePx as Number
+    ) as Void {
+        TextOutline.draw(dc, x, y, font, text, fillColor, outlineColor, justify, strokePx);
     }
 
     private function drawSunBorder(dc) {

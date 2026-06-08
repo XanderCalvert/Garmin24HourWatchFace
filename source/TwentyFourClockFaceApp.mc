@@ -15,6 +15,7 @@ class TwentyFourClockFaceApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
+        DisplaySettings.invalidateTimeFonts();
         WatchUi.requestUpdate();
     }
 

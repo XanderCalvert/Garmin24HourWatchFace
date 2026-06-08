@@ -5,9 +5,14 @@
     <string id="ThemeLight">Light</string>
     <string id="ThemeAuto">Follow device</string>
     <string id="Use24HourTitle">24-hour digital time</string>
-    <string id="ShowDigitalTimeTitle">Show digital time</string>
-    <string id="ShowStepsTitle">Show step count</string>
-    <string id="ShowBatteryTitle">Show battery</string>
-    <string id="ShowDateTitle">Show date</string>
+    <string id="DigitalTimeTitle">Digital time</string>
+    <string id="StepsTitle">Steps</string>
+    <string id="BatteryTitle">Battery</string>
+    <string id="DateTitle">Date</string>
+    <string id="DisplayHidden">Hidden</string>
+    <string id="DisplaySmall">Small</string>
+    <string id="DisplayLarge">Large</string>
+    <string id="StepsAutoHide">Auto-hide after goal</string>
+    <string id="BatteryWarningOnly">Warning only</string>
     <string id="ShowSunBorderTitle">Sunrise/sunset border</string>
 </strings>

@@ -1,9 +1,9 @@
 <properties>
     <property id="Theme" type="number">0</property>
     <property id="Use24Hour" type="boolean">true</property>
-    <property id="ShowDigitalTime" type="boolean">true</property>
-    <property id="ShowSteps" type="boolean">true</property>
-    <property id="ShowBattery" type="boolean">true</property>
-    <property id="ShowDate" type="boolean">true</property>
+    <property id="DigitalTimeMode" type="number">1</property>
+    <property id="StepsMode" type="number">1</property>
+    <property id="BatteryMode" type="number">1</property>
+    <property id="DateMode" type="number">1</property>
     <property id="ShowSunBorder" type="boolean">true</property>
 </properties>

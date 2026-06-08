@@ -8,32 +8,28 @@ class ClockFaceSettingsMenu extends WatchUi.Menu2 {
     function initialize() {
         Menu2.initialize({:title => "Display"});
 
-        addItem(new WatchUi.ToggleMenuItem(
+        addItem(new WatchUi.MenuItem(
             "Digital time",
-            null,
-            :showDigitalTime,
-            readBool("ShowDigitalTime"),
+            DisplaySettings.labelForDigitalTime(Theme.getDigitalTimeMode()),
+            :digitalTimeMode,
             null
         ));
-        addItem(new WatchUi.ToggleMenuItem(
-            "Step count",
-            null,
-            :showSteps,
-            readBool("ShowSteps"),
+        addItem(new WatchUi.MenuItem(
+            "Steps",
+            DisplaySettings.labelForSteps(Theme.getStepsMode()),
+            :stepsMode,
             null
         ));
-        addItem(new WatchUi.ToggleMenuItem(
-            "Battery %",
-            null,
-            :showBattery,
-            readBool("ShowBattery"),
+        addItem(new WatchUi.MenuItem(
+            "Battery",
+            DisplaySettings.labelForBattery(Theme.getBatteryMode()),
+            :batteryMode,
             null
         ));
-        addItem(new WatchUi.ToggleMenuItem(
+        addItem(new WatchUi.MenuItem(
             "Date",
-            null,
-            :showDate,
-            readBool("ShowDate"),
+            DisplaySettings.labelForDate(Theme.getDateMode()),
+            :dateMode,
             null
         ));
         addItem(new WatchUi.ToggleMenuItem(
@@ -66,29 +62,113 @@ class ClockFaceSettingsDelegate extends WatchUi.Menu2InputDelegate {
     }
 
     function onSelect(item as WatchUi.MenuItem) as Void {
-        if (!(item instanceof WatchUi.ToggleMenuItem)) {
+        if (item instanceof WatchUi.ToggleMenuItem) {
+            handleToggle(item as WatchUi.ToggleMenuItem);
             return;
         }
 
-        var toggle = item as WatchUi.ToggleMenuItem;
+        var id = item.getId();
+        if (id == :digitalTimeMode) {
+            pushModePicker(
+                "Digital time",
+                DisplaySettings.PROP_DIGITAL_TIME,
+                [ "Hidden", "Small", "Large" ],
+                [ DisplaySettings.MODE_HIDDEN, DisplaySettings.MODE_SMALL, DisplaySettings.MODE_LARGE ]
+            );
+        } else if (id == :stepsMode) {
+            pushModePicker(
+                "Steps",
+                DisplaySettings.PROP_STEPS,
+                [ "Hidden", "Small", "Large", "Auto-hide" ],
+                [
+                    DisplaySettings.MODE_HIDDEN,
+                    DisplaySettings.MODE_SMALL,
+                    DisplaySettings.MODE_LARGE,
+                    DisplaySettings.STEPS_AUTO_HIDE
+                ]
+            );
+        } else if (id == :batteryMode) {
+            pushModePicker(
+                "Battery",
+                DisplaySettings.PROP_BATTERY,
+                [ "Hidden", "Small", "Large", "Warning only" ],
+                [
+                    DisplaySettings.MODE_HIDDEN,
+                    DisplaySettings.MODE_SMALL,
+                    DisplaySettings.MODE_LARGE,
+                    DisplaySettings.BATTERY_WARNING_ONLY
+                ]
+            );
+        } else if (id == :dateMode) {
+            pushModePicker(
+                "Date",
+                DisplaySettings.PROP_DATE,
+                [ "Hidden", "Small", "Large" ],
+                [ DisplaySettings.MODE_HIDDEN, DisplaySettings.MODE_SMALL, DisplaySettings.MODE_LARGE ]
+            );
+        }
+    }
+
+    private function handleToggle(toggle as WatchUi.ToggleMenuItem) as Void {
         var enabled = toggle.isEnabled();
         var id = toggle.getId();
 
-        if (id == :showDigitalTime) {
-            Properties.setValue("ShowDigitalTime", enabled);
-        } else if (id == :showSteps) {
-            Properties.setValue("ShowSteps", enabled);
-        } else if (id == :showBattery) {
-            Properties.setValue("ShowBattery", enabled);
-        } else if (id == :showDate) {
-            Properties.setValue("ShowDate", enabled);
-        } else if (id == :showSunBorder) {
+        if (id == :showSunBorder) {
             Properties.setValue("ShowSunBorder", enabled);
         } else if (id == :use24Hour) {
             Properties.setValue("Use24Hour", enabled);
         }
 
         WatchUi.requestUpdate();
+    }
+
+    private function pushModePicker(
+        title as String,
+        propertyKey as String,
+        labels as Array<String>,
+        values as Array<Number>
+    ) as Void {
+        WatchUi.pushView(
+            new DisplayModePickerMenu(title, propertyKey, labels, values),
+            new DisplayModePickerDelegate(propertyKey),
+            WatchUi.SLIDE_LEFT
+        );
+    }
+
+}
+
+class DisplayModePickerMenu extends WatchUi.Menu2 {
+
+    function initialize(
+        title as String,
+        propertyKey as String,
+        labels as Array<String>,
+        values as Array<Number>
+    ) {
+        Menu2.initialize({:title => title});
+
+        var current = DisplaySettings.readMode(propertyKey);
+        for (var i = 0; i < labels.size(); i += 1) {
+            var suffix = values[i] == current ? " ✓" : null;
+            addItem(new WatchUi.MenuItem(labels[i], suffix, values[i], null));
+        }
+    }
+
+}
+
+class DisplayModePickerDelegate extends WatchUi.Menu2InputDelegate {
+
+    private var _propertyKey as String;
+
+    function initialize(propertyKey as String) {
+        Menu2InputDelegate.initialize();
+        _propertyKey = propertyKey;
+    }
+
+    function onSelect(item as WatchUi.MenuItem) as Void {
+        Properties.setValue(_propertyKey, item.getId());
+        WatchUi.requestUpdate();
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 
 }

@@ -64,24 +64,52 @@ module Theme {
         return getMutedColor();
     }
 
-    function showDigitalTime() {
-        return Properties.getValue("ShowDigitalTime");
+    function getTextOutlineColor() {
+        return getBackgroundColor();
+    }
+
+    function getDigitalTimeMode() as Number {
+        return DisplaySettings.readMode(DisplaySettings.PROP_DIGITAL_TIME);
+    }
+
+    function getStepsMode() as Number {
+        return DisplaySettings.readMode(DisplaySettings.PROP_STEPS);
+    }
+
+    function getBatteryMode() as Number {
+        return DisplaySettings.readMode(DisplaySettings.PROP_BATTERY);
+    }
+
+    function getDateMode() as Number {
+        return DisplaySettings.readMode(DisplaySettings.PROP_DATE);
+    }
+
+    function showDigitalTime() as Boolean {
+        return getDigitalTimeMode() != DisplaySettings.MODE_HIDDEN;
     }
 
     function use24HourDigital() {
         return Properties.getValue("Use24Hour");
     }
 
-    function showSteps() {
-        return Properties.getValue("ShowSteps");
+    function showSteps() as Boolean {
+        return DataFields.shouldShowSteps();
     }
 
-    function showBattery() {
-        return Properties.getValue("ShowBattery");
+    function showBattery() as Boolean {
+        var mode = getBatteryMode();
+        return mode == DisplaySettings.MODE_SMALL || mode == DisplaySettings.MODE_LARGE;
     }
 
-    function showDate() {
-        return Properties.getValue("ShowDate");
+    function showDate() as Boolean {
+        return getDateMode() != DisplaySettings.MODE_HIDDEN;
+    }
+
+    function hasVisibleHudContent() as Boolean {
+        return showDigitalTime()
+            || showSteps()
+            || showBattery()
+            || showDate();
     }
 
     function showSunBorder() {
@@ -90,6 +118,13 @@ module Theme {
 
     function getBatteryIndicatorTickColor() {
         return Graphics.COLOR_RED;
+    }
+
+    function getBatteryTextColor() {
+        if (DataFields.getBatteryAlertLevel() == DataFields.BATTERY_INDICATOR_CRITICAL) {
+            return getBatteryIndicatorTickColor();
+        }
+        return getStatsColor();
     }
 
     function getSunBorderColor(phase) {

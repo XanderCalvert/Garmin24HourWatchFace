@@ -9,17 +9,35 @@
     <setting propertyKey="@Properties.Use24Hour" title="@Strings.Use24HourTitle">
         <settingConfig type="boolean"/>
     </setting>
-    <setting propertyKey="@Properties.ShowDigitalTime" title="@Strings.ShowDigitalTimeTitle">
-        <settingConfig type="boolean"/>
+    <setting propertyKey="@Properties.DigitalTimeMode" title="@Strings.DigitalTimeTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.DisplayHidden</listEntry>
+            <listEntry value="1">@Strings.DisplaySmall</listEntry>
+            <listEntry value="2">@Strings.DisplayLarge</listEntry>
+        </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.ShowSteps" title="@Strings.ShowStepsTitle">
-        <settingConfig type="boolean"/>
+    <setting propertyKey="@Properties.StepsMode" title="@Strings.StepsTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.DisplayHidden</listEntry>
+            <listEntry value="1">@Strings.DisplaySmall</listEntry>
+            <listEntry value="2">@Strings.DisplayLarge</listEntry>
+            <listEntry value="3">@Strings.StepsAutoHide</listEntry>
+        </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
-        <settingConfig type="boolean"/>
+    <setting propertyKey="@Properties.BatteryMode" title="@Strings.BatteryTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.DisplayHidden</listEntry>
+            <listEntry value="1">@Strings.DisplaySmall</listEntry>
+            <listEntry value="2">@Strings.DisplayLarge</listEntry>
+            <listEntry value="3">@Strings.BatteryWarningOnly</listEntry>
+        </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.ShowDate" title="@Strings.ShowDateTitle">
-        <settingConfig type="boolean"/>
+    <setting propertyKey="@Properties.DateMode" title="@Strings.DateTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.DisplayHidden</listEntry>
+            <listEntry value="1">@Strings.DisplaySmall</listEntry>
+            <listEntry value="2">@Strings.DisplayLarge</listEntry>
+        </settingConfig>
     </setting>
     <setting propertyKey="@Properties.ShowSunBorder" title="@Strings.ShowSunBorderTitle">
         <settingConfig type="boolean"/>

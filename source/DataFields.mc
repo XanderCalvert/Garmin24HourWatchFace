@@ -1,8 +1,9 @@
 import Toybox.ActivityMonitor;
 import Toybox.Lang;
 import Toybox.System;
+import Toybox.Time.Gregorian;
 
-//! Centre digital time and subtle stats (steps, battery).
+//! Centre digital time and subtle stats (steps, battery, date).
 module DataFields {
 
     const BATTERY_INDICATOR_NONE = 0;
@@ -44,6 +45,30 @@ module DataFields {
         return info.steps;
     }
 
+    function isStepGoalReached() as Boolean {
+        if (!(Toybox has :ActivityMonitor)) {
+            return false;
+        }
+
+        var info = ActivityMonitor.getInfo();
+        if (info == null || info.steps == null || info.stepGoal == null) {
+            return false;
+        }
+
+        return info.steps >= info.stepGoal;
+    }
+
+    function shouldShowSteps() as Boolean {
+        var mode = Theme.getStepsMode();
+        if (mode == DisplaySettings.MODE_HIDDEN) {
+            return false;
+        }
+        if (mode == DisplaySettings.STEPS_AUTO_HIDE) {
+            return !isStepGoalReached();
+        }
+        return true;
+    }
+
     function getBatteryPercent() as Number or Null {
         var stats = System.getSystemStats();
         if (stats == null || stats.battery == null) {
@@ -62,12 +87,29 @@ module DataFields {
         return percent.format("%d") + "%";
     }
 
-    //! Bottom tick hint when battery % is hidden (see PLAN battery awareness).
-    function getBatteryIndicatorLevel() as Number {
-        if (Theme.showBattery()) {
-            return BATTERY_INDICATOR_NONE;
+    function formatStepsText() as String or Null {
+        if (!shouldShowSteps()) {
+            return null;
         }
 
+        var steps = getStepCount();
+        if (steps == null) {
+            return null;
+        }
+
+        return steps.format("%d");
+    }
+
+    function formatDateText(today as Gregorian.Info) as String or Null {
+        if (!Theme.showDate()) {
+            return null;
+        }
+
+        return EvaHud.formatDateLine(today);
+    }
+
+    //! Shared battery thresholds for the bottom tick and battery text colour.
+    function getBatteryAlertLevel() as Number {
         var percent = getBatteryPercent();
         if (percent == null) {
             return BATTERY_INDICATOR_NONE;
@@ -81,36 +123,13 @@ module DataFields {
         return BATTERY_INDICATOR_NONE;
     }
 
-    function hasStatsLine() as Boolean {
-        return formatStatsLine() != null;
-    }
-
-    //! Steps and battery on one line, separated when both are available.
-    function formatStatsLine() as String or Null {
-        var parts = [] as Array<String>;
-
-        if (Theme.showSteps()) {
-            var steps = getStepCount();
-            if (steps != null) {
-                parts.add(steps.format("%d"));
-            }
-        }
-
+    //! Bottom tick hint when battery % is hidden (see PLAN battery awareness).
+    function getBatteryIndicatorLevel() as Number {
         if (Theme.showBattery()) {
-            var batteryText = formatBatteryPercent();
-            if (batteryText != null) {
-                parts.add(batteryText);
-            }
+            return BATTERY_INDICATOR_NONE;
         }
 
-        if (parts.size() == 0) {
-            return null;
-        }
-        if (parts.size() == 1) {
-            return parts[0];
-        }
-
-        return parts[0] + "  " + parts[1];
+        return getBatteryAlertLevel();
     }
 
     function formatTwoDigits(value as Number) as String {

@@ -7,7 +7,6 @@ module EvaHud {
     const LABEL_DATE = "DATE";
     const LABEL_ENRG = "ENRG";
 
-    const DAY_NAMES = [ "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" ];
     const MONTH_NAMES = [ "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" ];
 
     const FRAME_HALF_W = 72;

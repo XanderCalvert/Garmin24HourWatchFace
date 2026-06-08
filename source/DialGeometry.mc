@@ -13,12 +13,6 @@ module DialGeometry {
     const HAND_HUB_RADIUS_REF = 30;
     const HAND_TO_DIAL_RATIO = 0.79;
     const CENTER_DOT_RADIUS_REF = 4;
-    // Centre cluster layout tuned at 280×280; scaled by screen min dimension.
-    const DIGITAL_TIME_Y_OFFSET_REF = -14;
-    const STATS_Y_OFFSET_REF = 20;
-    const DATE_Y_OFFSET_REF = 42;
-    const CENTER_DATA_BG_HALF_W_REF = 54;
-    const CENTER_DATA_BG_HALF_H_REF = 32;
 
     var centerX as Number = 0;
     var centerY as Number = 0;
@@ -33,11 +27,7 @@ module DialGeometry {
     var sunBorderOuter as Number = 0;
     var sunArcRadius as Number = 0;
     var sunDotRadius as Number = 0;
-    var digitalTimeYOffset as Number = 0;
-    var statsYOffset as Number = 0;
-    var dateYOffset as Number = 0;
-    var centerDataBgHalfW as Number = 0;
-    var centerDataBgHalfH as Number = 0;
+    var hudRowGap as Number = 0;
 
     function initFromDc(dc as Graphics.Dc) as Void {
         centerX = dc.getWidth() / 2;
@@ -74,12 +64,7 @@ module DialGeometry {
 
         sunArcRadius = (sunBorderOuter + sunBorderInner) / 2;
         sunDotRadius = (sunBorderOuter - sunBorderInner) / 2;
-
-        digitalTimeYOffset = scaleToPx(DIGITAL_TIME_Y_OFFSET_REF, scale);
-        statsYOffset = scaleToPx(STATS_Y_OFFSET_REF, scale);
-        dateYOffset = scaleToPx(DATE_Y_OFFSET_REF, scale);
-        centerDataBgHalfW = scaleToPx(CENTER_DATA_BG_HALF_W_REF, scale);
-        centerDataBgHalfH = scaleToPx(CENTER_DATA_BG_HALF_H_REF, scale);
+        hudRowGap = scaleToPx(HudLayout.ROW_GAP_REF, scale);
     }
 
     function scaleToPx(refPx as Number, scale as Float) as Number {
